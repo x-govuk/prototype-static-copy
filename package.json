@@ -1,0 +1,22 @@
+{
+  "name": "prototype-static-copy",
+  "version": "0.1.0",
+  "description": " A tool to make a static copy of one prototype inside another.",
+  "main": "index.js",
+  "bin": {
+    "prototype-static-copy": "prototype-static-copy.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-govuk/prototype-static-copy.git"
+  },
+  "author": "Natalie Carey <natalie@nataliecarey.uk>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/x-govuk/prototype-static-copy/issues"
+  },
+  "homepage": "https://github.com/x-govuk/prototype-static-copy#readme",
+  "dependencies": {
+    "inquirer": "^8.2.0"
+  }
+}
