@@ -35,10 +35,7 @@ function getAuthArgsForWGet(username, password) {
   console.log()
   console.log('This can take some time, feel free to make yourself a coffee while you wait.')
 
-  console.table({name, url, username, password})
-
   const pathToUse = path.join(os.tmpdir(), 'prototype-static-copy', '' + Date.now())
-  console.table({pathToUse})
 
   await fsp.mkdir(pathToUse, {recursive: true})
   const knownErrors = []
@@ -67,12 +64,12 @@ function getAuthArgsForWGet(username, password) {
       clearInterval(interval)
       const publicUrl = `/public/${name}`;
       await prepareAndCopy(url, pathToUse, path.join(process.cwd(), 'app', 'assets', name), publicUrl, username, password)
-      if (knownErrors.length > 0) {
-        console.warn('')
-        console.warn('The following URLs failed to be downloaded:')
-        console.warn('')
-        knownErrors.forEach(x => console.warn('-', x))
-      }
+      // if (knownErrors.length > 0) {
+      //   console.warn('')
+      //   console.warn('The following URLs failed to be downloaded:')
+      //   console.warn('')
+      //   knownErrors.forEach(x => console.warn('-', x))
+      // }
       console.log('')
       
       try {
@@ -107,7 +104,6 @@ async function getHtmlFiles(dir) {
 
 async function prepareAndCopy(url, tmpDir, finalDir, publicUrl, username, password) {
   const downloadDir = path.join(tmpDir, (await fsp.readdir(tmpDir))[0])
-  console.table({tmpDir, downloadDir, finalDir})
   const files = await getHtmlFiles(downloadDir)
   const additionalDownloads = []
   while (files.length > 0) {
@@ -146,8 +142,7 @@ async function prepareAndCopy(url, tmpDir, finalDir, publicUrl, username, passwo
   while (remainingToDownload.length > 0) {
     const url = remainingToDownload.pop()
     await runWGet(['--force-directories', ...getAuthArgsForWGet(username, password), url], tmpDir)
-      .then(() => console.log('Downloaded', url))
-      .catch(err => console.error(err))
+      .catch(err => process.env.LOG_EVERYTHING === 'true' && console.error(err))
   }
 
   await fsp.rename(downloadDir, finalDir)
@@ -176,7 +171,6 @@ function runWGet(args, pathToUse, knownErrorUrls = []) {
     })
     
     wget.on('close', async (code) => {
-      console.log(`child process exited with code ${code}`)
       if (code === 0 || code === 3) {
         console.log('successfully ran command', `[wget ${args.join(' ')}] in dir [${pathToUse}]`)
         resolve()
